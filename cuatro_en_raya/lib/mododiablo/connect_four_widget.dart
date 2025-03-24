@@ -145,6 +145,10 @@ class _ConnectFourWidgetState extends State<ConnectFourWidget> {
                   ),
               ],
             ),
+          FloatingActionButton(
+            onPressed: resetGame,
+            child: Icon(Icons.refresh),
+          ),
         ],
       ),
     );

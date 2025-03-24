@@ -55,17 +55,27 @@ class GameService {
     }
   }
 
+  // Lista de juegos disponibles localmente
+  List<String> getLocalGameModes() {
+    return ['fácil', 'normal', 'diablo'];
+  }
+
+  // Método para obtener los modos de juego (online o local)
   Future<List<String>> getGameModes() async {
+    if (!_isServerAvailable) {
+      return getLocalGameModes();
+    }
+
     try {
       final response = await http.get(Uri.parse('$baseUrl/games'));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         return data.map((game) => game['name'] as String).toList();
       } else {
-        throw Exception('Error al cargar los modos de juego');
+        return getLocalGameModes();
       }
     } catch (e) {
-      throw Exception('Error de conexión: $e');
+      return getLocalGameModes();
     }
   }
 

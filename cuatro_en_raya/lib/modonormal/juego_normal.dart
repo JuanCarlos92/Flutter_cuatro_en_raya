@@ -230,7 +230,6 @@ class _JuegoNormalState extends State<JuegoNormal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.gameName)),
       body: Center(child: construirTablero()),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,

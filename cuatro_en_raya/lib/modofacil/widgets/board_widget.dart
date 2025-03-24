@@ -51,7 +51,8 @@ class _BoardWidgetState extends State<BoardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         // Centra el contenido verticalmente
         mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +69,7 @@ class _BoardWidgetState extends State<BoardWidget> {
           // Muestra el nivel actual del juego
           Text(
             'Nivel: ${board.currentLevel == 0 ? "Exterior" : "Interior"}',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 18, color: Colors.white),
           ),
           SizedBox(height: 20),
           // Genera las filas del tablero de juego
@@ -113,6 +114,10 @@ class _BoardWidgetState extends State<BoardWidget> {
                   ),
               ],
             ),
+          FloatingActionButton(
+            onPressed: resetGame,
+            child: Icon(Icons.refresh),
+          ),
         ],
       ),
     );
