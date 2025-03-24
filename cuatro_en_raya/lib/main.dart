@@ -1,5 +1,5 @@
-import 'package:cuatro_en_raya/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,8 +12,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "main", // Título aplicación
-      home: Home(), // La página principal 'Home'
+      title: "4 en Raya",
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: const HomeScreen(),
     );
   }
 }

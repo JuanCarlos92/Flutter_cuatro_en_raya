@@ -1,5 +1,5 @@
-import 'package:cuatro_en_raya/widgets/board_widget.dart';
-import 'package:cuatro_en_raya/widgets/header_widget.dart';
+import 'package:cuatro_en_raya/modofacil/widgets/board_widget.dart';
+import 'package:cuatro_en_raya/modofacil/widgets/header_widget.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
