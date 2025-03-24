@@ -2,88 +2,9 @@ import 'package:flutter/material.dart';
 import '../modofacil/widgets/board_widget.dart';
 import '../mododiablo/connect_four_widget.dart';
 import '../modonormal/juego_normal.dart';
-import '../services/game_service.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final GameService _gameService = GameService();
-  List<String> gameModes = [];
-  bool isLoading = true;
-  String? error;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadGameModes();
-  }
-
-  Future<void> _loadGameModes() async {
-    try {
-      final modes = await _gameService.getGameModes();
-      setState(() {
-        gameModes = modes;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        error = e.toString();
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _startGame(String gameMode) async {
-    try {
-      await _gameService.startGame(gameMode);
-      if (mounted) {
-        _navigateToGame(gameMode);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
-      }
-    }
-  }
-
-  void _navigateToGame(String gameMode) {
-    Widget gameWidget;
-    String title;
-
-    switch (gameMode.toLowerCase()) {
-      case 'fácil':
-        gameWidget = const BoardWidget();
-        title = 'MODO FÁCIL';
-        break;
-      case 'normal':
-        gameWidget = JuegoNormal(gameId: 'normal', gameName: 'MODO NORMAL');
-        title = 'MODO NORMAL';
-        break;
-      case 'diablo':
-        gameWidget = const ConnectFourWidget();
-        title = 'MODO DIABLO';
-        break;
-      default:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Modo de juego no válido')),
-        );
-        return;
-    }
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => GameScreen(title: title, gameWidget: gameWidget),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,63 +42,64 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 24, color: Colors.white),
               ),
               const SizedBox(height: 40),
-              if (isLoading)
-                const CircularProgressIndicator(color: Colors.white)
-              else if (error != null)
-                Text(
-                  error!,
-                  style: const TextStyle(color: Colors.red),
-                  textAlign: TextAlign.center,
-                )
-              else
-                ...gameModes.map(
-                  (mode) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: _buildGameModeButton(
-                      context,
-                      'MODO ${mode.toUpperCase()}',
-                      '4 en Raya ${mode == 'diablo'
-                          ? 'Clásico'
-                          : mode == 'normal'
-                          ? 'Clásico'
-                          : 'Interior'}',
-                      _getIconForMode(mode),
-                      _getColorForMode(mode),
-                      () => _startGame(mode),
-                    ),
+              _buildGameModeButton(
+                context,
+                'MODO FÁCIL',
+                '4 en Raya Interior',
+                Icons.star,
+                Colors.green,
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => GameScreen(
+                          title: 'MODO FÁCIL',
+                          gameWidget: const BoardWidget(),
+                        ),
                   ),
                 ),
+              ),
+              const SizedBox(height: 20),
+              _buildGameModeButton(
+                context,
+                'MODO NORMAL',
+                '4 en Raya Clásico',
+                Icons.extension,
+                Colors.orange,
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => JuegoNormal(
+                          gameId: 'normal',
+                          gameName: 'MODO NORMAL',
+                        ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              _buildGameModeButton(
+                context,
+                'MODO DIABLO',
+                '4 en Raya Clásico',
+                Icons.whatshot,
+                Colors.red,
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => GameScreen(
+                          title: 'MODO DIABLO',
+                          gameWidget: const ConnectFourWidget(),
+                        ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  IconData _getIconForMode(String mode) {
-    switch (mode.toLowerCase()) {
-      case 'fácil':
-        return Icons.star;
-      case 'normal':
-        return Icons.extension;
-      case 'diablo':
-        return Icons.whatshot;
-      default:
-        return Icons.games;
-    }
-  }
-
-  Color _getColorForMode(String mode) {
-    switch (mode.toLowerCase()) {
-      case 'fácil':
-        return Colors.green;
-      case 'normal':
-        return Colors.orange;
-      case 'diablo':
-        return Colors.red;
-      default:
-        return Colors.blue;
-    }
   }
 
   Widget _buildGameModeButton(
